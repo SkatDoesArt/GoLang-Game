@@ -135,11 +135,12 @@ Run all tests:
 go test ./...
 ```
 ---
-🤝 Contributing
-This is a personal project. If you’d like to suggest improvements:
 
-Open an issue describing the idea or bug
-If submitting a PR, keep changes focused and include a brief summary
+## 🤝 Contributing
+
+This is a personal project. If you’d like to suggest improvements:
+- Open an issue describing the idea or bug
+- If submitting a PR, keep changes focused and include a brief summary
 
 ---
 
