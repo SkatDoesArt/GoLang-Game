@@ -1,71 +1,67 @@
+Here is the English translation of your README:
+
+---
+
 # GoLang-Game
-
-Jeu 2D en Go basé sur Ebitengine (Ebiten) illustrant un rendu de terrain par quadtree, la lecture de cartes depuis des fichiers, une génération aléatoire de cartes, plusieurs modes de caméra et diverses extensions ludiques (portails, zoom, sauvegarde, chasse au trésor, etc.).
-
+A 2D Go game based on Ebitengine (Ebiten) illustrating terrain rendering via quadtree, map loading from files, random map generation, multiple camera modes, and various gameplay extensions (portals, zoom, save, treasure hunt, etc.).
 <img src=goGamePic.png alt="GoGamePic">
 
+---
 
-## Aperçu rapide
+## Quick Overview
+- **Engine**: Ebitengine v2
+- **Floor Rendering**: Simple grid, from file, via quadtree, or random generation (quadtree)
+- **Movement**: Keyboard arrows, configurable animation
+- **Camera**: Static, follow character, or limited to borders
+- **Options**: Torus world (round earth), water blocking, animated tiles, zoom, portals, random map save, treasure hunt
+- **Debug Overlay**: Grid, camera/character coordinates, etc. (press D)
 
-- Moteur: Ebitengine v2
-- Rendu du sol: quadrillage simple, depuis fichier, via quadtree, ou génération aléatoire (quadtree)
-- Déplacements: flèches du clavier, animation paramétrable
-- Caméra: statique, suivie du personnage, ou limitée aux bordures
-- Options: monde torique (terre ronde), blocage sur l’eau, tuiles animées, zoom, portails, sauvegarde de carte aléatoire, chasse au trésor
-- Overlay debug: grille, coordonnées caméra/personnage, etc. (touche D)
+---
 
+## Prerequisites
+- Go 1.21+ (tested with Go 1.23.2)
+- Windows, macOS, or Linux. Commands below are for Windows PowerShell.
 
-## Prérequis
+---
 
-- Go 1.21+ (testé avec Go 1.23.2)
-- Windows, macOS ou Linux. Les commandes ci-dessous sont données pour Windows PowerShell.
-
-
-## Installation des dépendances
-
-Depuis la racine du dépôt :
-
+## Install Dependencies
+From the repository root:
 ```powershell
 go mod tidy
 ```
 
+---
 
-## Lancer le jeu
+## Run the Game
+Several options depending on your current directory:
 
-Plusieurs options selon votre dossier courant :
-
-- Depuis la racine du projet (en ciblant l’appli dans `cmd/`) :
-
+- From the project root (targeting the app in `cmd/`):
 ```powershell
 go run ./cmd -config ./cmd/config.json
 ```
-
-- Ou compilez puis exécutez :
-
+- Or compile and run:
 ```powershell
 go build ./cmd
 ./cmd.exe -config ./cmd/config.json
 ```
+**Notes:**
+- The `-config` parameter is optional. Without it, the executable looks for `config.json` in the current directory.
+- Relative paths (e.g., to a map) are resolved from your current directory at runtime.
 
-Remarques :
-- Le paramètre `-config` est optionnel. Sans précision, l’exécutable cherche `config.json` dans le dossier courant.
-- Les chemins relatifs (par ex. vers une carte) sont résolus depuis votre dossier courant au moment de l’exécution.
+---
 
+## Keyboard Controls
+- **Arrow keys**: Move character
+- **D**: Toggle debug display
+- **Numpad +**: Zoom out (show more tiles) if `Zoom` is true
+- **Numpad -**: Zoom in (show fewer tiles) if `Zoom` is true
+- **T**: Place a portal (if `Portal` is true). Max two portals; stepping on one teleports to the other.
+- **S**: Save the randomly generated map (if `FloorKind` = 3 and `Sauvegarde` is true)
 
-## Commandes clavier
-
-- Flèches directionnelles: déplacer le personnage
-- D: activer/désactiver l’affichage debug
-- Pavé numérique +: dézoomer (afficher plus de tuiles) si `Zoom` est true
-- Pavé numérique -: zoomer (afficher moins de tuiles) si `Zoom` est true
-- T: poser un portail (si `Portal` est true). Deux portails max; marcher sur l’un téléporte à l’autre
-- S: sauvegarder la carte générée aléatoirement (si `FloorKind` = 3 et `Sauvegarde` est true)
-
+---
 
 ## Configuration
-
-Le fichier `cmd/config.json` contient tous les réglages. Exemple fourni :
-
+The `cmd/config.json` file contains all settings. Example provided:
 ```json
 {
 	"DebugMode": false,
@@ -89,79 +85,64 @@ Le fichier `cmd/config.json` contient tous les réglages. Exemple fourni :
 	"Chasseautresor": false
 }
 ```
+**Main fields:**
+- `DebugMode` (bool): Enable debug overlay (can also be toggled via D)
+- `NumTileX`, `NumTileY` (int): Number of tiles visible on screen (excluding debug area)
+- `TileSize` (int): Size (px) of a tile
+- `NumCharacterAnimImages` (int): Number of images per character animation step
+- `NumFramePerCharacterAnimImage` (int): Number of updates between animation frames
+- `NumTileForDebug` (int): Width in tiles of the debug info area (right/top)
+- `CameraMode` (int): 0=static, 1=follow character, 2=limited to borders
+  - In mode 2, if `TerreRonde` is true, the camera follows the character (no border blocking)
+- `FloorKind` (int): 0=grid, 1=from file, 2=quadtree (from file), 3=random generation (quadtree)
+- `FloorFile` (string): Path to a map (used for `FloorKind` 1 or 2)
+- `RandomMapXSize`, `RandomMapYSize` (int): Dimensions of the random map (for `FloorKind` 3)
+- `TerreRonde` (bool): Torus world (horizontal/vertical wrap) for quadtree/file reading
+- `PasMarcheEau` (bool): Prevent walking on water (tile type 4)
+- `BlocAnimated` (bool): Enable animation for certain floor tiles
+- `Zoom` (bool): Allow numpad +/− for zooming
+- `Portal` (bool): Allow portal placement and teleportation (press T)
+- `Sauvegarde` (bool): Allow saving a random map (press S)
+- `Chasseautresor` (bool): Enable treasure hunt mode
 
-Description des champs principaux :
+**Notes:**
+- Tile types: Floor tile indices come from `assets/floor.png`. Value 4 corresponds to water (used by `PasMarcheEau`).
+- In "treasure hunt" mode, a random treasure is placed; the distance in blocks is displayed. At distance ≤ 1, the message "Treasure found! Victory!" appears.
 
-- DebugMode (bool): active l’overlay debug (peut aussi être togglé via D)
-- NumTileX, NumTileY (int): nombre de tuiles visibles à l’écran (hors zone debug)
-- TileSize (int): taille (px) d’une tuile
-- NumCharacterAnimImages (int): nombre d’images par pas d’animation du personnage
-- NumFramePerCharacterAnimImage (int): nombre d’updates entre deux frames d’anim
-- NumTileForDebug (int): largeur en tuiles de la zone d’infos debug à droite/haut
-- CameraMode (int): 0=statique, 1=suivi du personnage, 2=limité aux bords
-	- En mode 2, si `TerreRonde` est true, la caméra suit le personnage (pas de blocage sur bords)
-- FloorKind (int): 0=quadrillage, 1=depuis fichier, 2=quadtree (depuis fichier), 3=génération aléatoire (quadtree)
-- FloorFile (string): chemin vers une carte (utilisé pour `FloorKind` 1 ou 2)
-- RandomMapXSize, RandomMapYSize (int): dimensions de la carte aléatoire (pour `FloorKind` 3)
-- TerreRonde (bool): monde torique (wrap horizontal/vertical) pour la lecture quadtree/fichier
-- PasMarcheEau (bool): empêche la marche sur l’eau (tuile de type 4)
-- BlocAnimated (bool): active l’animation de certaines tuiles du sol
-- Zoom (bool): autorise les touches +/− du pavé numérique
-- Portal (bool): autorise la pose et la téléportation via portails (touche T)
-- Sauvegarde (bool): autorise la sauvegarde d’une carte aléatoire (touche S)
-- Chasseautresor (bool): active le mode chasse au trésor
+---
 
-Notes :
-- Types de tuile: les indices de tuiles du sol proviennent de `assets/floor.png`. La valeur 4 correspond à l’eau (utilisée par `PasMarcheEau`).
-- En mode « chasse au trésor », un trésor aléatoire est placé ; la distance en blocs s’affiche. À distance ≤ 1, le message « Victoire trésor trouvé ! » apparaît.
-
-
-## Structure du projet
-
+## Project Structure
 ```
-assets/         # images embarquées (go:embed) et crédits
-camera/         # modes de caméra (statique, suivi, limité aux bords)
-character/      # logique d’animation et déplacement du personnage
-cmd/            # point d’entrée (main), config par défaut
-configuration/  # lecture/stockage de la configuration globale
-floor/          # gestion du terrain (grid, fichier, quadtree, random) + dessin + collisions
-floor-files/    # exemples de cartes (fichiers texte de chiffres)
-game/           # boucle de jeu Ebiten (Init, Update, Draw, Layout)
-portal/         # portails: création, update, dessin, téléportation
-quadtree/       # structure quadtree + construction / requêtes + tests
-tresor/         # mode chasse au trésor (placement, dessin, distance)
+assets/         # Embedded images (go:embed) and credits
+camera/         # Camera modes (static, follow, limited to borders)
+character/      # Character animation and movement logic
+cmd/            # Entry point (main), default config
+configuration/  # Global configuration reading/storage
+floor/          # Floor management (grid, file, quadtree, random) + drawing + collisions
+floor-files/    # Example maps (text files with numbers)
+game/           # Ebiten game loop (Init, Update, Draw, Layout)
+portal/         # Portals: creation, update, drawing, teleportation
+quadtree/       # Quadtree structure + construction/queries + tests
+tresor/         # Treasure hunt mode (placement, drawing, distance)
 ```
 
+---
 
 ## Tests
-
-Des tests couvrent la construction et les requêtes quadtree ainsi que la lecture de cartes.
-
-Exécuter tous les tests :
-
+Tests cover quadtree construction and queries, as well as map reading.
+Run all tests:
 ```powershell
 go test ./...
 ```
 
+---
 
-## Crédits assets
+## Troubleshooting
+- **Black window/partial screen**: Ensure `assets.Load()` is called (it is in `cmd/main.go`) and that `TileSize`, `NumTileX/Y` result in a displayable window.
+- **Map not found**: Adjust `FloorFile` according to your current directory. From the root, use a path like `./floor-files/map-name`.
+- **Character "stuck" at the edge**: Switch `CameraMode` to 2 to limit the camera to borders, or enable `TerreRonde` for wrapping.
+- **Zoom inactive**: Set `Zoom` to true and use the numpad (+ to zoom out, − to zoom in).
+- **Portals inactive**: Set `Portal` to true. Max two portals; the first is replaced if a third is placed.
+- **Save inactive**: Requires `FloorKind` = 3 (random map) and `Sauvegarde` = true. The file is written to `floor-files/` with a timestamp.
 
-Voir `assets/licence` :
-- character.png — CC-BY 3.0 — Lanea Zimmerman, Clint Bellanger, Charles Gabriel, basxto — https://opengameart.org/content/tiny-16-more-character-animations
-- floor.png — CC-BY 4.0 — Ivan Voirol — https://opengameart.org/content/tinyslates-16x16px-orthogonal-tileset-by-ivan-voirol
-- portail.png, tresor.png — inclus dans le dépôt (utilisés pour les fonctionnalités associées)
-
-
-## Dépannage
-
-- Fenêtre noire/écran partiel: vérifiez que `assets.Load()` est bien appelé (c’est le cas dans `cmd/main.go`) et que `TileSize`, `NumTileX/Y` donnent une fenêtre affichable.
-- Carte introuvable: ajustez `FloorFile` selon votre dossier courant. Depuis la racine, utilisez un chemin comme `./floor-files/nom-de-carte`.
-- Le personnage « bloque » au bord: basculez `CameraMode` sur 2 pour limiter la caméra aux bords, ou activez `TerreRonde` pour du wrap.
-- Zoom inactif: mettez `Zoom` à true et utilisez le pavé numérique (+ pour dézoomer, − pour zoomer).
-- Portails inactifs: mettez `Portal` à true. Deux portails max; le 1er est remplacé si un 3e est posé.
-- Sauvegarde inactive: nécessite `FloorKind` = 3 (carte aléatoire) et `Sauvegarde` = true. Le fichier est écrit dans `floor-files/` avec un timestamp.
-
-
-## Licence
-
-Code : ce dépôt inclut un fichier `LICENSE`. Les assets ont leurs licences propres (voir section Crédits assets).
+---
