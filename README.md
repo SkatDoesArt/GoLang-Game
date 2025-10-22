@@ -1,9 +1,9 @@
-Here is the English translation of your README:
 
----
 
 # GoLang-Game
 A 2D Go game based on Ebitengine (Ebiten) illustrating terrain rendering via quadtree, map loading from files, random map generation, multiple camera modes, and various gameplay extensions (portals, zoom, save, treasure hunt, etc.).
+
+
 <img src=goGamePic.png alt="GoGamePic">
 
 ---
@@ -134,6 +134,12 @@ Run all tests:
 ```powershell
 go test ./...
 ```
+---
+🤝 Contributing
+This is a personal project. If you’d like to suggest improvements:
+
+Open an issue describing the idea or bug
+If submitting a PR, keep changes focused and include a brief summary
 
 ---
 
