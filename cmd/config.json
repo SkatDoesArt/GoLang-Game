@@ -1,0 +1,21 @@
+{
+    "DebugMode": false,
+    "NumTileX": 9,
+    "NumTileY": 9,
+    "TileSize": 16,
+    "NumCharacterAnimImages": 5,
+    "NumFramePerCharacterAnimImage": 5,
+    "NumTileForDebug": 6,
+    "CameraMode": 1,
+    "FloorKind": 2,
+    "FloorFile": "../floor-files/beaupasbeau",
+    "RandomMapXSize" : 15,
+	"RandomMapYSize": 15,
+    "TerreRonde": false,
+    "PasMarcheEau": false,
+    "BlocAnimated" : false,
+    "Zoom" : false,
+    "Portal": false,
+    "Sauvegarde": false,
+    "Chasseautresor": false
+}
